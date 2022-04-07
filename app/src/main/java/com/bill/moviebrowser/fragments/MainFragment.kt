@@ -17,11 +17,6 @@ class MainFragment : Fragment() {
   private lateinit var adapter: MovieAdapter
   @Volatile private lateinit var page: TVDB.Page
 
-//  override fun onCreate(savedInstanceState: Bundle?) {
-//    super.onCreate(savedInstanceState)
-//    binding.searchView.visibility = false
-//  }
-
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
@@ -36,15 +31,8 @@ class MainFragment : Fragment() {
 
     viewLifecycleOwner.lifecycleScope.launch {
       page = tvdb.getPopularMovies()
-
-//      //When working with livedata objects
-//      page.movies.observe(viewLifecycleOwner) {
-//        adapter.changeList(it)
-//      }
-
       adapter.changeList(page.movies)
       }
-
 
     return binding.root
   }

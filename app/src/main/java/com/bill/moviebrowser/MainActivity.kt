@@ -1,10 +1,10 @@
 package com.bill.moviebrowser
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.bill.moviebrowser.fragments.MainFragment
 import com.example.moviebrowser.R
 import com.example.moviebrowser.databinding.ActivityMainBinding
-import com.bill.moviebrowser.fragments.MainFragment
 
 class MainActivity : AppCompatActivity() {
   private lateinit var binding: ActivityMainBinding

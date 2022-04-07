@@ -1,7 +1,5 @@
 package com.bill.moviebrowser
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.bill.moviebrowser.room.Movie
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
