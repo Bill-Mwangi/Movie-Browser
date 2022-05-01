@@ -3,6 +3,7 @@ package com.bill.moviebrowser
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bill.moviebrowser.room.Movie
@@ -16,6 +17,8 @@ class MovieAdapter(private var list: List<Movie>) :
   private val baseUrl = "https://image.tmdb.org/t/p/w92"
 
   constructor() : this(emptyList<Movie>())
+
+  constructor(livedata: LiveData<List<Movie>>) : this(livedata.value ?: emptyList())
 
   inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 

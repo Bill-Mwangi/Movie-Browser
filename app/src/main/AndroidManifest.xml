@@ -12,8 +12,7 @@
         android:label="@string/latest_movies"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-
-        android:theme="@style/Theme.MovieBrowser">
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         <activity
             android:name="com.bill.moviebrowser.MainActivity"
             android:exported="true">

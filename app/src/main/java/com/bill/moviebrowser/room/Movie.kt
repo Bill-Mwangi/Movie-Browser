@@ -1,24 +1,23 @@
 package com.bill.moviebrowser.room
 
-import android.graphics.Bitmap
-//import android.util.Log
-//import android.view.View
-//import androidx.room.Entity
-//import androidx.room.Ignore
-//import androidx.room.OnConflictStrategy
-//import androidx.room.PrimaryKey
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
-//@Entity(tableName = "movie")
+@Entity(tableName = "movie")
 data class Movie(
-//  @PrimaryKey(OnConflict = OnConflictStrategy.REPLACE)
-  val id: Int,
+  @SerializedName("id")
+  @ColumnInfo(name = "tvdb_id")
+  val tvdbID: Int = 0,
   @SerializedName("original_title")
   val title: String,
   @SerializedName("overview")
   val description: String,
   @SerializedName("poster_path")
-  val imagePath: String,
-//  @Ignore
-  var image: Bitmap?
-)
+  val imagePath: String
+) {
+  @PrimaryKey(autoGenerate = true)
+  @ColumnInfo(name = "id")
+  var movieID: Int = 0
+}
