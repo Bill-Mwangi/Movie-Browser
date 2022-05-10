@@ -10,6 +10,7 @@ import com.example.moviebrowser.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
   private lateinit var binding: ActivityMainBinding
+  private lateinit var mainFragment: MainFragment
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -19,15 +20,28 @@ class MainActivity : AppCompatActivity() {
     val toolbar: Toolbar = findViewById(R.id.toolbar)
     setSupportActionBar(toolbar)
 
-    val mainFrag = MainFragment()
+    mainFragment = MainFragment()
     supportFragmentManager.beginTransaction().apply {
-      replace(R.id.main_frag_container, mainFrag)
+      replace(R.id.main_frag_container, mainFragment)
       commit()
     }
   }
 
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
     menuInflater.inflate(R.menu.menu_items, menu)
+
+//    val search = menu?.findItem(R.id.search_button)
+//    val searchView = search?.actionView as? SearchView
+//    searchView?.isSubmitButtonEnabled = true
+//    searchView?.setOnQueryTextListener(this)
     return true
   }
+
+//  override fun onQueryTextChange(newText: String?): Boolean {
+//    mainFragment.
+//  }
+//
+//  override fun onQueryTextSubmit(query: String?): Boolean {
+//    TODO("Not yet implemented")
+//  }
 }
