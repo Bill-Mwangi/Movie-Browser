@@ -16,7 +16,7 @@ import com.example.moviebrowser.databinding.FragmentMainBinding
 
 class MainFragment : Fragment(), SearchView.OnQueryTextListener {
   private lateinit var binding: FragmentMainBinding
-  private lateinit var adapter: MovieAdapter
+  private val adapter: MovieAdapter by lazy { MovieAdapter() }
   private lateinit var viewModel: MovieViewModel
 
   override fun onCreateView(
@@ -28,7 +28,6 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
     //Setting the RecyclerView
     binding.rvMovies.layoutManager = LinearLayoutManager(context)
     viewModel = ViewModelProvider(this)[MovieViewModel::class.java]
-    adapter = MovieAdapter()
     binding.rvMovies.adapter = adapter
 
     viewModel.localData.observe(viewLifecycleOwner) {

@@ -5,7 +5,6 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieDao {
@@ -25,5 +24,5 @@ interface MovieDao {
   fun remove(movie: Movie)
 
   @Query("SELECT * FROM movie WHERE title LIKE :searchQuery")
-  fun searchMovie(searchQuery: String): Flow<List<Movie>>
+  fun searchMovie(searchQuery: String): LiveData<List<Movie>>
 }

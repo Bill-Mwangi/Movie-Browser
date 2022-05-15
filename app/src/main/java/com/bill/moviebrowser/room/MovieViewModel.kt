@@ -1,7 +1,10 @@
 package com.bill.moviebrowser.room
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.bill.moviebrowser.TVDB
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -11,7 +14,7 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
 
   var localData: LiveData<List<Movie>> = MutableLiveData()
 
-  //    var onlineData: MutableLiveData<List<Movie>> = MutableLiveData()
+  //  var onlineData: MutableLiveData<List<Movie>> = MutableLiveData()
   private var repository: MovieRepository
 
   init {
@@ -22,16 +25,15 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
 //      onlineData = repository.fetchOnlineData()
       localData = repository.fetchLocalData()
 
-      //FIXME: Temporarily adding remote data to local db
-//      onlineData.value?.let {
-//        repository.add(it)
-//        Log.d("Local Data", "Data added")
-//      }
+////      onlineData.value?.let {
+////        repository.add(it)
+////        Log.d("Local Data", "Data added")
+////      }
     }
 
   }
 
   fun searchDatabase(searchQuery: String): LiveData<List<Movie>> {
-    return repository.search(searchQuery).asLiveData()
+    return repository.search(searchQuery)
   }
 }
