@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
       replace(R.id.main_frag_container, mainFragment)
       commit()
     }
+
+    //Todo: Add the drawer layout buttons to the activity and implement onClickListener
   }
 
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
