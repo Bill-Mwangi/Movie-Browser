@@ -17,12 +17,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="@string/movie_browser" />
+        android:text="@string/movie_browser"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="@string/author_info" />
+        android:text="@string/author_info"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
 </LinearLayout>
