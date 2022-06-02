@@ -5,13 +5,19 @@
       <map>
         <entry key="..\:/Users/Bill/Projects/MovieBrowser/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/Users/Bill/Projects/MovieBrowser/app/src/main/res/font/roboto.xml" value="0.4161458333333333" />
-        <entry key="..\:/Users/Bill/Projects/MovieBrowser/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/Bill/Projects/MovieBrowser/app/src/main/res/layout/activity_main.xml" value="0.1908713692946058" />
         <entry key="..\:/Users/Bill/Projects/MovieBrowser/app/src/main/res/layout/fragment_main.xml" value="0.2234375" />
         <entry key="..\:/Users/Bill/Projects/MovieBrowser/app/src/main/res/layout/movie_item.xml" value="0.25" />
-        <entry key="..\:/Users/Bill/Projects/MovieBrowser/app/src/main/res/layout/nav_header.xml" value="0.2234375" />
         <entry key="..\:/Users/Bill/Projects/MovieBrowser/app/src/main/res/layout/toolbar.xml" value="0.14074074074074075" />
-        <entry key="..\:/Users/Bill/Projects/MovieBrowser/app/src/main/res/menu/drawer_menu.xml" value="0.2234375" />
         <entry key="..\:/Users/Bill/Projects/MovieBrowser/app/src/main/res/menu/menu_items.xml" value="0.33" />
+        <entry key="..\:/Users/Zeus/Projects/Movie Browser/app/src/main/res/layout/activity_main.xml" value="0.3859375" />
+        <entry key="..\:/Users/Zeus/Projects/Movie Browser/app/src/main/res/layout/fragment_details.xml" value="0.22" />
+        <entry key="..\:/Users/Zeus/Projects/Movie Browser/app/src/main/res/layout/fragment_main.xml" value="0.1" />
+        <entry key="..\:/Users/Zeus/Projects/Movie Browser/app/src/main/res/layout/movie_details.xml" value="0.33" />
+        <entry key="..\:/Users/Zeus/Projects/Movie Browser/app/src/main/res/layout/nav_header.xml" value="0.3859375" />
+        <entry key="..\:/Users/Zeus/Projects/Movie Browser/app/src/main/res/layout/toolbar.xml" value="0.3859375" />
+        <entry key="..\:/Users/Zeus/Projects/Movie Browser/app/src/main/res/menu/drawer_menu.xml" value="0.3859375" />
+        <entry key="..\:/Users/Zeus/Projects/Movie Browser/app/src/main/res/menu/menu_items.xml" value="0.3859375" />
       </map>
     </option>
   </component>

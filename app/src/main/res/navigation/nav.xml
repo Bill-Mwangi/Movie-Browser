@@ -9,5 +9,22 @@
         android:id="@+id/mainFragment"
         android:name="com.bill.moviebrowser.fragments.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/navigate_to_details_fragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.bill.moviebrowser.fragments.DetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details">
+        <action
+            android:id="@+id/navigate_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <argument
+            android:name="movie"
+            app:argType="com.bill.moviebrowser.room.Movie" />
+    </fragment>
 </navigation>

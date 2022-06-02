@@ -1,23 +1,22 @@
 package com.bill.moviebrowser.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bill.moviebrowser.MovieAdapter
-import com.bill.moviebrowser.room.MovieViewModel
+import com.bill.moviebrowser.room.Movie
+import com.bill.moviebrowser.viewmodel.MovieViewModel
 import com.example.moviebrowser.R
 import com.example.moviebrowser.databinding.FragmentMainBinding
 
-class MainFragment : Fragment(), SearchView.OnQueryTextListener {
+class MainFragment : Fragment(), SearchView.OnQueryTextListener, MovieAdapter.OnItemClickListener {
   private lateinit var binding: FragmentMainBinding
-  private val adapter: MovieAdapter by lazy { MovieAdapter() }
-  private lateinit var viewModel: MovieViewModel
+  private val adapter: MovieAdapter by lazy { MovieAdapter(this) }
+  private val viewModel: MovieViewModel by viewModels()
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
@@ -27,22 +26,42 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
 
     //Setting the RecyclerView
     binding.rvMovies.layoutManager = LinearLayoutManager(context)
-    viewModel = ViewModelProvider(this)[MovieViewModel::class.java]
+//    viewModel = ViewModelProvider(this)[MovieViewModel::class.java]
     binding.rvMovies.adapter = adapter
 
-    viewModel.localData.observe(viewLifecycleOwner) {
+
+//    viewModel.localData.observe(viewLifecycleOwner) {
+//      adapter.changeList(it)
+//    }
+
+    //TODO: Check if there is a network connection before using the online source
+    viewModel.onlineData.observe(viewLifecycleOwner) {
       adapter.changeList(it)
     }
 
     return binding.root
   }
 
+  override fun onItemClick(position: Int, view: View?) {
+//    Toast.makeText(context, "Item $position clicked", Toast.LENGTH_SHORT).show()
+    val clickedItem: Movie = adapter.movieList[position]
+
+    val action = MainFragmentDirections.navigateToDetailsFragment(clickedItem)
+    view?.findNavController()?.navigate(action)
+  }
+//    val clickedItem = viewModel.localData.value!!.get(position)
+
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setHasOptionsMenu(true)
   }
 
-  override fun onPrepareOptionsMenu(menu: Menu) {
+  override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    super.onCreateOptionsMenu(menu, inflater)
+    menu.clear()
+    inflater.inflate(R.menu.menu_items, menu)
+
     val search = menu.findItem(R.id.search_button)
     val searchView = search?.actionView as? SearchView
     searchView?.isSubmitButtonEnabled = true

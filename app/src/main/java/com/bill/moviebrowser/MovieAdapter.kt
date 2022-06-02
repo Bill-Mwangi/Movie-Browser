@@ -9,14 +9,24 @@ import com.bill.moviebrowser.room.Movie
 import com.example.moviebrowser.R
 import com.example.moviebrowser.databinding.MovieItemBinding
 
-class MovieAdapter :
+class MovieAdapter(private val listener: OnItemClickListener) :
   RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
-  private var movieList = emptyList<Movie>()
+  var movieList = emptyList<Movie>()
   private lateinit var binding: MovieItemBinding
   private lateinit var url: String
   private val baseUrl = "https://image.tmdb.org/t/p/w92"
 
-  inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+  inner class MovieViewHolder(itemView: View) : View.OnClickListener,
+    RecyclerView.ViewHolder(itemView) {
+
+    init {
+      itemView.setOnClickListener(this)
+    }
+
+    override fun onClick(v: View?) {
+      if (adapterPosition != RecyclerView.NO_POSITION) listener.onItemClick(adapterPosition, v)
+    }
+  }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
     binding = MovieItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -25,7 +35,7 @@ class MovieAdapter :
 
   override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
     binding.apply {
-      url = "$baseUrl${movieList[position].imagePath}"
+      url = "$baseUrl${movieList[position].poster}"
       imgPoster.load(url) {
         placeholder(R.drawable.ic_launcher_background)
       }
@@ -43,7 +53,11 @@ class MovieAdapter :
   }
 
   fun changeList(newList: List<Movie>) {
-    this.movieList = newList
+    movieList = newList
     notifyDataSetChanged()
+  }
+
+  interface OnItemClickListener {
+    fun onItemClick(position: Int, view: View?)
   }
 }
