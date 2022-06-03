@@ -10,4 +10,7 @@
     <string name="author_info">billmwangi156@gmail.com</string>
     <string name="dev_info">Developer information</string>
     <string name="movie_poster">Movie poster</string>
+    <string name="movies">Movies</string>
+    <string name="tv_show">TV Shows</string>
+    <string name="music">Music</string>
 </resources>
