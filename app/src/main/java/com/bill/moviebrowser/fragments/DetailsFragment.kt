@@ -20,10 +20,10 @@ class DetailsFragment : Fragment() {
     binding = FragmentDetailsBinding.inflate(layoutInflater, container, false)
 
     binding.apply {
-      if (args.movie.backdrop != null) imageView.load("https://image.tmdb.org/t/p/w780${args.movie.backdrop}")
-      else imageView.load("https://image.tmdb.org/t/p/w780${args.movie.poster}")
+      if (args.movie.backdrop != null) imageview.load("https://image.tmdb.org/t/p/w780${args.movie.backdrop}")
+      else imageview.load("https://image.tmdb.org/t/p/w780${args.movie.poster}")
       titleTv.text = args.movie.title
-      detailsTv.text = args.movie.description
+      descTv.text = args.movie.description
     }
 
     return binding.root

@@ -13,7 +13,6 @@ class TVDB {
   private val language = "en-US"
   private lateinit var baseUrl: String
   private lateinit var url: String
-  private lateinit var json: String
 
   private val gson = Gson()
   private val client = OkHttpClient()
@@ -43,6 +42,17 @@ class TVDB {
     val movies: List<Movie>
   )
 
+  data class Cast(
+    val adult: Boolean,
+    val gender: Int,
+    val id: Int,
+    val name: String,
+    @SerializedName("profile_path")
+    val profilePath: String,
+    val character: String,
+    val order: Int
+  )
+
   class ImageConfig(
     @SerializedName("base_url")
     val baseUrl: String,
@@ -55,8 +65,9 @@ class TVDB {
    * Takes the apiKey and Language as parameters
    */
   suspend fun getLatestMovie(): Movie {
+    var json: String
     baseUrl = "https://api.themoviedb.org/3/movie/latest?"
-    url = "${baseUrl}api_key=$apiKey&language=$language"
+    val url = "${baseUrl}api_key=$apiKey&language=$language"
 
     withContext(Dispatchers.IO) {
       json = getRequest(url)
@@ -70,7 +81,63 @@ class TVDB {
    */
   suspend fun getPopularMovies(page: Int = 1): Page {
     baseUrl = "https://api.themoviedb.org/3/movie/popular?"
-    url = "${baseUrl}api_key=$apiKey&language=$language&page=$page"
+    val url = "${baseUrl}api_key=$apiKey&language=$language&page=$page"
+    var json: String
+
+    withContext(Dispatchers.IO) {
+      json = getRequest(url)
+    }
+    return gson.fromJson(json, Page::class.java)
+  }
+
+  suspend fun getSimilarMovies(movieId: Int, page: Int = 1): Page {
+    val url =
+      "https://api.themoviedb.org/3/movie/$movieId/similar?api_key=$apiKey&language=$language&page=$page"
+    var json: String
+
+    withContext(Dispatchers.IO) {
+      json = getRequest(url)
+    }
+    return gson.fromJson(json, Page::class.java)
+  }
+
+  suspend fun getCast(movieId: Int): Cast {
+    val url =
+      "https://api.themoviedb.org/3/movie/$movieId/credits?api_key=$apiKey&language=$language"
+    var json: String
+
+    withContext(Dispatchers.IO) {
+      json = getRequest(url)
+    }
+    return gson.fromJson(json, Cast::class.java)
+  }
+
+  suspend fun getRecommendations(movieId: Int, page: Int = 1): Page {
+    val url =
+      "https://api.themoviedb.org/3/movie/$movieId/recommendations?api_key=$apiKey&language=$language&page=$page"
+    var json: String
+
+    withContext(Dispatchers.IO) {
+      json = getRequest(url)
+    }
+    return gson.fromJson(json, Page::class.java)
+  }
+
+  suspend fun getTopRatedMovies(page: Int = 1): Page {
+    val url =
+      "https://api.themoviedb.org/3/movie/top_rated?api_key=$apiKey&language=$language&page=$page"
+    var json: String
+
+    withContext(Dispatchers.IO) {
+      json = getRequest(url)
+    }
+    return gson.fromJson(json, Page::class.java)
+  }
+
+  suspend fun getReviews(movieId: Int, page: Int = 1): Page {
+    val url =
+      "https://api.themoviedb.org/3/movie/$movieId/reviews?api_key=$apiKey&language=$language&page=$page"
+    var json: String
 
     withContext(Dispatchers.IO) {
       json = getRequest(url)
@@ -83,8 +150,8 @@ class TVDB {
    * Takes the apiKey as a parameter
    */
   suspend fun getConfig() {
-    baseUrl = "https://api.themoviedb.org/3/configuration?"
-    url = "${baseUrl}api_key=$apiKey"
+    baseUrl = "https://api.themoviedb.org/3/configuration?api_key=$apiKey"
+    var json: String
 
     withContext(Dispatchers.IO) {
       json = getRequest(url)
