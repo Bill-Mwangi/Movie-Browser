@@ -3,8 +3,6 @@ package com.bill.moviebrowser
 import com.bill.moviebrowser.room.Movie
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -64,14 +62,11 @@ class TVDB {
    * Get the most recently added movie
    * Takes the apiKey and Language as parameters
    */
-  suspend fun getLatestMovie(): Movie {
-    var json: String
+  fun getLatestMovie(): Movie {
+
     baseUrl = "https://api.themoviedb.org/3/movie/latest?"
     val url = "${baseUrl}api_key=$apiKey&language=$language"
-
-    withContext(Dispatchers.IO) {
-      json = getRequest(url)
-    }
+    val json = getRequest(url)
     return gson.fromJson(json, Movie::class.java)
   }
 
@@ -79,69 +74,45 @@ class TVDB {
    * Get popular movies in the current page
    * Takes the apiKey, Language and the page number as parameters
    */
-  suspend fun getPopularMovies(page: Int = 1): Page {
+  fun getPopularMovies(page: Int = 1): Page {
     baseUrl = "https://api.themoviedb.org/3/movie/popular?"
     val url = "${baseUrl}api_key=$apiKey&language=$language&page=$page"
-    var json: String
-
-    withContext(Dispatchers.IO) {
-      json = getRequest(url)
-    }
+    val json = getRequest(url)
     return gson.fromJson(json, Page::class.java)
   }
 
-  suspend fun getSimilarMovies(movieId: Int, page: Int = 1): Page {
+  fun getSimilarMovies(movieId: Int, page: Int = 1): Page {
     val url =
       "https://api.themoviedb.org/3/movie/$movieId/similar?api_key=$apiKey&language=$language&page=$page"
-    var json: String
-
-    withContext(Dispatchers.IO) {
-      json = getRequest(url)
-    }
+    val json = getRequest(url)
     return gson.fromJson(json, Page::class.java)
   }
 
-  suspend fun getCast(movieId: Int): Cast {
+  fun getCast(movieId: Int): Cast {
     val url =
       "https://api.themoviedb.org/3/movie/$movieId/credits?api_key=$apiKey&language=$language"
-    var json: String
-
-    withContext(Dispatchers.IO) {
-      json = getRequest(url)
-    }
+    val json = getRequest(url)
     return gson.fromJson(json, Cast::class.java)
   }
 
-  suspend fun getRecommendations(movieId: Int, page: Int = 1): Page {
+  fun getRecommendations(movieId: Int, page: Int = 1): Page {
     val url =
       "https://api.themoviedb.org/3/movie/$movieId/recommendations?api_key=$apiKey&language=$language&page=$page"
-    var json: String
-
-    withContext(Dispatchers.IO) {
-      json = getRequest(url)
-    }
+    val json = getRequest(url)
     return gson.fromJson(json, Page::class.java)
   }
 
-  suspend fun getTopRatedMovies(page: Int = 1): Page {
+  fun getTopRatedMovies(page: Int = 1): Page {
     val url =
       "https://api.themoviedb.org/3/movie/top_rated?api_key=$apiKey&language=$language&page=$page"
-    var json: String
-
-    withContext(Dispatchers.IO) {
-      json = getRequest(url)
-    }
+    val json = getRequest(url)
     return gson.fromJson(json, Page::class.java)
   }
 
-  suspend fun getReviews(movieId: Int, page: Int = 1): Page {
+  fun getReviews(movieId: Int, page: Int = 1): Page {
     val url =
       "https://api.themoviedb.org/3/movie/$movieId/reviews?api_key=$apiKey&language=$language&page=$page"
-    var json: String
-
-    withContext(Dispatchers.IO) {
-      json = getRequest(url)
-    }
+    val json = getRequest(url)
     return gson.fromJson(json, Page::class.java)
   }
 
@@ -151,12 +122,7 @@ class TVDB {
    */
   suspend fun getConfig() {
     baseUrl = "https://api.themoviedb.org/3/configuration?api_key=$apiKey"
-    var json: String
-
-    withContext(Dispatchers.IO) {
-      json = getRequest(url)
-    }
-
+    var json = getRequest(url)
     val imageConfig = gson.fromJson(json, ImageConfig::class.java)
     ImageBaseUrl = imageConfig.baseUrl
     ImageSecureBaseUrl = imageConfig.secureBaseUrl

@@ -24,32 +24,23 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener, MovieAdapter.On
   ): View {
     binding = FragmentMainBinding.inflate(layoutInflater, container, false)
 
-    //Setting the RecyclerView
     binding.rvMovies.layoutManager = LinearLayoutManager(context)
-//    viewModel = ViewModelProvider(this)[MovieViewModel::class.java]
     binding.rvMovies.adapter = adapter
 
-
-//    viewModel.localData.observe(viewLifecycleOwner) {
-//      adapter.changeList(it)
-//    }
-
-    //TODO: Check if there is a network connection before using the online source
-    viewModel.onlineData.observe(viewLifecycleOwner) {
-      adapter.changeList(it)
+    viewModel.localData.observe(viewLifecycleOwner) { movie ->
+      movie?.let { adapter.changeList(it) }
     }
+    //TODO: Check if there is a network connection before using the online source
 
     return binding.root
   }
 
   override fun onItemClick(position: Int, view: View?) {
-//    Toast.makeText(context, "Item $position clicked", Toast.LENGTH_SHORT).show()
     val clickedItem: Movie = adapter.movieList[position]
 
     val action = MainFragmentDirections.navigateToDetailsFragment(clickedItem)
     view?.findNavController()?.navigate(action)
   }
-//    val clickedItem = viewModel.localData.value!!.get(position)
 
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,9 +71,12 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener, MovieAdapter.On
   private fun searchDatabase(query: String) {
     val searchQuery = "%$query%"
 
-    viewModel.searchDatabase(searchQuery).observe(this) { list ->
-      list.let {
-        adapter.changeList(it)
+    viewModel.apply {
+      searchDatabase(searchQuery)
+      searchList.observe(viewLifecycleOwner) { list ->
+        list?.let {
+          adapter.changeList(it)
+        }
       }
     }
   }

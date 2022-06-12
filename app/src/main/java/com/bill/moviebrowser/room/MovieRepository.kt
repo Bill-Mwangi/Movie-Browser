@@ -1,19 +1,20 @@
 package com.bill.moviebrowser.room
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.bill.moviebrowser.TVDB
 
 class MovieRepository(private val movieDao: MovieDao, private val tvdb: TVDB) {
 
-  fun fetchLocalData(): LiveData<List<Movie>> = movieDao.getAll()
+  fun fetchLocalData(): List<Movie> = movieDao.getAll()
 
-  suspend fun fetchOnlineData(): MutableLiveData<List<Movie>> =
-    MutableLiveData(tvdb.getPopularMovies().movies)
+  fun fetchOnlineData(): List<Movie> =
+    tvdb.getPopularMovies().movies
+
+  fun fetchRecommendations(movieId: Int, pageNo: Int) =
+    tvdb.getRecommendations(movieId, pageNo).movies
 
   fun add(movieList: List<Movie>) = movieDao.add(movieList)
 
-  fun search(searchQuery: String): LiveData<List<Movie>> {
+  fun search(searchQuery: String): List<Movie> {
     return movieDao.searchMovie(searchQuery)
   }
 }

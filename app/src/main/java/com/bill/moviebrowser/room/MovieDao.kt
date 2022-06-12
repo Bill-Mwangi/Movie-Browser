@@ -1,6 +1,5 @@
 package com.bill.moviebrowser.room
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -9,7 +8,7 @@ import androidx.room.Query
 @Dao
 interface MovieDao {
   @Query("SELECT * FROM movie ORDER BY id")
-  fun getAll(): LiveData<List<Movie>>
+  fun getAll(): List<Movie>
 
   @Insert
   fun add(movie: Movie)
@@ -24,5 +23,5 @@ interface MovieDao {
   fun remove(movie: Movie)
 
   @Query("SELECT * FROM movie WHERE title LIKE :searchQuery")
-  fun searchMovie(searchQuery: String): LiveData<List<Movie>>
+  fun searchMovie(searchQuery: String): List<Movie>
 }

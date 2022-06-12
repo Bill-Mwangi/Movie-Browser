@@ -15,9 +15,24 @@ import kotlinx.coroutines.launch
 
 class MovieViewModel(application: Application) : AndroidViewModel(application) {
 
-  var localData: LiveData<List<Movie>> = MutableLiveData()
+  private var _localData: MutableLiveData<List<Movie>> = MutableLiveData()
+  private var _onlineData: MutableLiveData<List<Movie>> = MutableLiveData()
+  private var _recommendations: MutableLiveData<List<Movie>> = MutableLiveData()
+  private var _searchList: MutableLiveData<List<Movie>> = MutableLiveData()
 
-  var onlineData: MutableLiveData<List<Movie>> = MutableLiveData()
+  val localData: LiveData<List<Movie>>
+    get() = _localData
+
+  val onlineData: LiveData<List<Movie>>
+    get() = _onlineData
+
+  val recommendations: LiveData<List<Movie>>
+    get() = _recommendations
+
+  val searchList: LiveData<List<Movie>>
+    get() = _searchList
+
+
   private var repository: MovieRepository
 
   init {
@@ -25,16 +40,25 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
     repository = MovieRepository(movieDao, TVDB.getInstance())
 
     viewModelScope.launch(Dispatchers.IO) {
-      localData = repository.fetchLocalData()
-      onlineData = repository.fetchOnlineData()
+      _localData.postValue(repository.fetchLocalData())
+      _onlineData.postValue(repository.fetchOnlineData())
 
-      onlineData.value?.let {
-        repository.add(it)
-      }
+//      onlineData.value?.let {
+//        repository.add(it)
+//      }
     }
   }
 
-  fun searchDatabase(searchQuery: String): LiveData<List<Movie>> {
-    return repository.search(searchQuery)
+  fun searchDatabase(searchQuery: String) {
+    viewModelScope.launch(Dispatchers.IO) {
+      _searchList.postValue(repository.search(searchQuery))
+    }
+
+  }
+
+  fun getRecommendations(movieId: Int, pageNo: Int = 1) {
+    viewModelScope.launch(Dispatchers.IO) {
+      _recommendations.postValue(repository.fetchRecommendations(movieId, pageNo))
+    }
   }
 }
