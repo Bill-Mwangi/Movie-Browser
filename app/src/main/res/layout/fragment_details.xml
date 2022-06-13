@@ -43,6 +43,26 @@
             app:layout_constraintTop_toBottomOf="@id/title_tv" />
 
         <TextView
+            android:id="@+id/cast_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="@string/cast"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/desc_tv" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/cast_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cast_tv" />
+
+        <TextView
             android:id="@+id/recommended_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,7 +72,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/desc_tv" />
+            app:layout_constraintTop_toBottomOf="@id/cast_rv" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recommendations_rv"

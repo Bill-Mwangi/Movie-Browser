@@ -1,6 +1,7 @@
 package com.bill.moviebrowser.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
+import com.bill.moviebrowser.CastAdapter
 import com.bill.moviebrowser.MovieAdapter
 import com.bill.moviebrowser.room.Movie
 import com.bill.moviebrowser.viewmodel.MovieViewModel
@@ -19,6 +21,7 @@ class DetailsFragment : Fragment(), MovieAdapter.OnItemClickListener {
   private lateinit var binding: FragmentDetailsBinding
   private val args: DetailsFragmentArgs by navArgs()
   private val movieAdapter: MovieAdapter by lazy { MovieAdapter(this) }
+  private val castAdapter: CastAdapter by lazy { CastAdapter() }
   private val viewModel: MovieViewModel by viewModels()
 
   override fun onCreateView(
@@ -26,7 +29,7 @@ class DetailsFragment : Fragment(), MovieAdapter.OnItemClickListener {
     savedInstanceState: Bundle?
   ): View {
     binding = FragmentDetailsBinding.inflate(layoutInflater, container, false)
-    viewModel.getRecommendations(args.movie.tvdbID, 1)
+    viewModel.data(args.movie.tvdbID, 1)
 
     binding.apply {
       if (args.movie.backdrop != null) imageview.load("https://image.tmdb.org/t/p/w780${args.movie.backdrop}")
@@ -35,6 +38,15 @@ class DetailsFragment : Fragment(), MovieAdapter.OnItemClickListener {
       titleTv.text = args.movie.title
       descTv.text = args.movie.description
 
+      recommendationsRv.apply {
+        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        adapter = movieAdapter
+      }
+
+      castRv.apply {
+        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        adapter = castAdapter
+      }
 
       viewModel.recommendations.observe(viewLifecycleOwner) { movie ->
         movie?.let {
@@ -42,11 +54,11 @@ class DetailsFragment : Fragment(), MovieAdapter.OnItemClickListener {
         }
       }
 
-
-
-      recommendationsRv.apply {
-        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        adapter = movieAdapter
+      viewModel.castList.observe(viewLifecycleOwner) { movie ->
+        movie?.let {
+          castAdapter.changeList(it)
+          Log.d("cast", it.toString())
+        }
       }
     }
 

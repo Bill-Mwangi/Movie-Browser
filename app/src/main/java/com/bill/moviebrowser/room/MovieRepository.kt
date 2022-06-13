@@ -6,11 +6,13 @@ class MovieRepository(private val movieDao: MovieDao, private val tvdb: TVDB) {
 
   fun fetchLocalData(): List<Movie> = movieDao.getAll()
 
-  fun fetchOnlineData(): List<Movie> =
+  suspend fun fetchOnlineData(): List<Movie> =
     tvdb.getPopularMovies().movies
 
-  fun fetchRecommendations(movieId: Int, pageNo: Int) =
+  suspend fun fetchMovieRecommendations(movieId: Int, pageNo: Int) =
     tvdb.getRecommendations(movieId, pageNo).movies
+
+  suspend fun fetchMovieCast(movieId: Int) = tvdb.getCast(movieId).list
 
   fun add(movieList: List<Movie>) = movieDao.add(movieList)
 

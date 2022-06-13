@@ -14,4 +14,5 @@
     <string name="tv_show">TV Shows</string>
     <string name="music">Music</string>
     <string name="recommended">Recommended</string>
+    <string name="cast"><![CDATA[Cast & Crew]]></string>
 </resources>

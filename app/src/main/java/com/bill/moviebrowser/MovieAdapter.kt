@@ -13,7 +13,6 @@ class MovieAdapter(private val listener: OnItemClickListener) :
   RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
   var movieList = emptyList<Movie>()
   private lateinit var binding: MovieItemBinding
-  private lateinit var url: String
   private val baseUrl = "https://image.tmdb.org/t/p/w92"
 
   inner class MovieViewHolder(itemView: View) : View.OnClickListener,
@@ -35,8 +34,7 @@ class MovieAdapter(private val listener: OnItemClickListener) :
 
   override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
     binding.apply {
-      url = "$baseUrl${movieList[position].poster}"
-      imgPoster.load(url) {
+      imgPoster.load("$baseUrl${movieList[position].poster}") {
         placeholder(R.drawable.ic_launcher_background)
       }
       tvTitle.text = movieList[position].title

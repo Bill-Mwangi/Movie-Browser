@@ -51,6 +51,12 @@ class TVDB {
     val order: Int
   )
 
+  data class CastList(
+    val id: Int,
+    @SerializedName("cast")
+    val list: List<Cast>
+  )
+
   class ImageConfig(
     @SerializedName("base_url")
     val baseUrl: String,
@@ -62,7 +68,7 @@ class TVDB {
    * Get the most recently added movie
    * Takes the apiKey and Language as parameters
    */
-  fun getLatestMovie(): Movie {
+  suspend fun getLatestMovie(): Movie {
 
     baseUrl = "https://api.themoviedb.org/3/movie/latest?"
     val url = "${baseUrl}api_key=$apiKey&language=$language"
@@ -74,42 +80,42 @@ class TVDB {
    * Get popular movies in the current page
    * Takes the apiKey, Language and the page number as parameters
    */
-  fun getPopularMovies(page: Int = 1): Page {
+  suspend fun getPopularMovies(page: Int = 1): Page {
     baseUrl = "https://api.themoviedb.org/3/movie/popular?"
     val url = "${baseUrl}api_key=$apiKey&language=$language&page=$page"
     val json = getRequest(url)
     return gson.fromJson(json, Page::class.java)
   }
 
-  fun getSimilarMovies(movieId: Int, page: Int = 1): Page {
+  suspend fun getSimilarMovies(movieId: Int, page: Int = 1): Page {
     val url =
       "https://api.themoviedb.org/3/movie/$movieId/similar?api_key=$apiKey&language=$language&page=$page"
     val json = getRequest(url)
     return gson.fromJson(json, Page::class.java)
   }
 
-  fun getCast(movieId: Int): Cast {
+  suspend fun getCast(movieId: Int): CastList {
     val url =
       "https://api.themoviedb.org/3/movie/$movieId/credits?api_key=$apiKey&language=$language"
     val json = getRequest(url)
-    return gson.fromJson(json, Cast::class.java)
+    return gson.fromJson(json, CastList::class.java)
   }
 
-  fun getRecommendations(movieId: Int, page: Int = 1): Page {
+  suspend fun getRecommendations(movieId: Int, page: Int = 1): Page {
     val url =
       "https://api.themoviedb.org/3/movie/$movieId/recommendations?api_key=$apiKey&language=$language&page=$page"
     val json = getRequest(url)
     return gson.fromJson(json, Page::class.java)
   }
 
-  fun getTopRatedMovies(page: Int = 1): Page {
+  suspend fun getTopRatedMovies(page: Int = 1): Page {
     val url =
       "https://api.themoviedb.org/3/movie/top_rated?api_key=$apiKey&language=$language&page=$page"
     val json = getRequest(url)
     return gson.fromJson(json, Page::class.java)
   }
 
-  fun getReviews(movieId: Int, page: Int = 1): Page {
+  suspend fun getReviews(movieId: Int, page: Int = 1): Page {
     val url =
       "https://api.themoviedb.org/3/movie/$movieId/reviews?api_key=$apiKey&language=$language&page=$page"
     val json = getRequest(url)
@@ -122,13 +128,13 @@ class TVDB {
    */
   suspend fun getConfig() {
     baseUrl = "https://api.themoviedb.org/3/configuration?api_key=$apiKey"
-    var json = getRequest(url)
+    val json = getRequest(url)
     val imageConfig = gson.fromJson(json, ImageConfig::class.java)
     ImageBaseUrl = imageConfig.baseUrl
     ImageSecureBaseUrl = imageConfig.secureBaseUrl
   }
 
-  private fun getRequest(url: String): String {
+  private suspend fun getRequest(url: String): String {
     val request = Request.Builder().url(url).build()
     val response = client.newCall(request).execute()
     response.use { return response.body?.string() ?: "Null response" }

@@ -19,6 +19,7 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
   private var _onlineData: MutableLiveData<List<Movie>> = MutableLiveData()
   private var _recommendations: MutableLiveData<List<Movie>> = MutableLiveData()
   private var _searchList: MutableLiveData<List<Movie>> = MutableLiveData()
+  private var _castList: MutableLiveData<List<TVDB.Cast>> = MutableLiveData()
 
   val localData: LiveData<List<Movie>>
     get() = _localData
@@ -32,6 +33,8 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
   val searchList: LiveData<List<Movie>>
     get() = _searchList
 
+  val castList: LiveData<List<TVDB.Cast>>
+    get() = _castList
 
   private var repository: MovieRepository
 
@@ -56,9 +59,10 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
 
   }
 
-  fun getRecommendations(movieId: Int, pageNo: Int = 1) {
+  fun data(movieId: Int, pageNo: Int = 1) {
     viewModelScope.launch(Dispatchers.IO) {
-      _recommendations.postValue(repository.fetchRecommendations(movieId, pageNo))
+      _recommendations.postValue(repository.fetchMovieRecommendations(movieId, pageNo))
+      _castList.postValue(repository.fetchMovieCast(movieId))
     }
   }
 }
