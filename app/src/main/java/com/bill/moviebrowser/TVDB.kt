@@ -40,21 +40,11 @@ class TVDB {
     val movies: List<Movie>
   )
 
-  data class Cast(
-    val adult: Boolean,
-    val gender: Int,
-    val id: Int,
-    val name: String,
-    @SerializedName("profile_path")
-    val profilePath: String,
-    val character: String,
-    val order: Int
-  )
 
   data class CastList(
     val id: Int,
     @SerializedName("cast")
-    val list: List<Cast>
+    val list: List<Movie.Cast>
   )
 
   class ImageConfig(

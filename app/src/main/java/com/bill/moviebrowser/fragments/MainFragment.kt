@@ -27,7 +27,7 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener, MovieAdapter.On
     binding.rvMovies.layoutManager = LinearLayoutManager(context)
     binding.rvMovies.adapter = adapter
 
-    viewModel.localData.observe(viewLifecycleOwner) { movie ->
+    viewModel.onlineData.observe(viewLifecycleOwner) { movie ->
       movie?.let { adapter.changeList(it) }
     }
     //TODO: Check if there is a network connection before using the online source

@@ -1,9 +1,6 @@
 package com.bill.moviebrowser.room
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface MovieDao {
@@ -24,4 +21,12 @@ interface MovieDao {
 
   @Query("SELECT * FROM movie WHERE title LIKE :searchQuery")
   fun searchMovie(searchQuery: String): List<Movie>
+
+  @Transaction
+  @Query("SELECT * FROM movie")
+  fun getMovieWithCast(): Movie.MovieWithCast
+
+  @Transaction
+  @Query("SELECT * FROM cast")
+  fun getCastWithMovies(): Movie.CastWithMovie
 }

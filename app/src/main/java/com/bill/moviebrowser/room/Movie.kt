@@ -2,16 +2,13 @@ package com.bill.moviebrowser.room
 
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "movie")
 data class Movie(
   @SerializedName("id")
-  @ColumnInfo(name = "tvdb_id")
-  val tvdbID: Int = 0,
+  val tvdbId: Int = 0,
   @SerializedName("original_title")
   val title: String,
   @SerializedName("overview")
@@ -23,7 +20,7 @@ data class Movie(
 ) : Parcelable {
   @PrimaryKey(autoGenerate = true)
   @ColumnInfo(name = "id")
-  var movieID: Int = 0
+  var movieId: Int = 0
 
   constructor(parcel: Parcel) : this(
     parcel.readInt(),
@@ -32,8 +29,48 @@ data class Movie(
     parcel.readString()!!,
     parcel.readString()
   ) {
-    movieID = parcel.readInt()
+    movieId = parcel.readInt()
   }
+
+  @Entity(tableName = "cast")
+  data class Cast(
+    @SerializedName("id")
+    @PrimaryKey val castId: Int,
+    val adult: Boolean,
+    val gender: Int,
+    val name: String,
+    @SerializedName("profile_path")
+    val profilePath: String,
+    val character: String,
+    val order: Int
+  )
+
+  @Entity(tableName = "movie_cast", primaryKeys = ["tvdbId", "castId"])
+  data class MovieCastCrossRef(
+    val tvdbId: Int,
+    @ColumnInfo(index = true)
+    val castId: Int
+  )
+
+  data class MovieWithCast(
+    @Embedded val movie: Movie,
+    @Relation(
+      parentColumn = "tvdbId",
+      entityColumn = "castId",
+      associateBy = Junction(MovieCastCrossRef::class)
+    )
+    val cast: List<Cast>
+  )
+
+  data class CastWithMovie(
+    @Embedded val cast: Cast,
+    @Relation(
+      parentColumn = "castId",
+      entityColumn = "tvdbId",
+      associateBy = Junction(MovieCastCrossRef::class)
+    )
+    val movies: List<Movie>
+  )
 
   override fun describeContents(): Int {
     return 0
@@ -41,12 +78,12 @@ data class Movie(
 
   override fun writeToParcel(dest: Parcel?, flags: Int) {
     if (dest != null) {
-      dest.writeInt(tvdbID)
+      dest.writeInt(tvdbId)
       dest.writeString(title)
       dest.writeString(description)
       dest.writeString(poster)
       dest.writeString(backdrop)
-      dest.writeInt(movieID)
+      dest.writeInt(movieId)
     }
   }
 
