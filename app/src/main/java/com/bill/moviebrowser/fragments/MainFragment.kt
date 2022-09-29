@@ -12,7 +12,9 @@ import com.bill.moviebrowser.room.Movie
 import com.bill.moviebrowser.viewmodel.MovieViewModel
 import com.example.moviebrowser.R
 import com.example.moviebrowser.databinding.FragmentMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainFragment : Fragment(), SearchView.OnQueryTextListener, MovieAdapter.OnItemClickListener {
   private lateinit var binding: FragmentMainBinding
   private val adapter: MovieAdapter by lazy { MovieAdapter(this) }
