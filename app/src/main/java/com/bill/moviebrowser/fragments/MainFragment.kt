@@ -4,21 +4,22 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bill.moviebrowser.MovieAdapter
-import com.bill.moviebrowser.room.Movie
+import com.bill.moviebrowser.MovieDto
 import com.bill.moviebrowser.viewmodel.MovieViewModel
 import com.example.moviebrowser.R
 import com.example.moviebrowser.databinding.FragmentMainBinding
+import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainFragment : Fragment(), SearchView.OnQueryTextListener, MovieAdapter.OnItemClickListener {
   private lateinit var binding: FragmentMainBinding
   private val adapter: MovieAdapter by lazy { MovieAdapter(this) }
-  private val viewModel: MovieViewModel by viewModels()
+  private val viewModel: MovieViewModel by activityViewModels()
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
@@ -29,7 +30,8 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener, MovieAdapter.On
     binding.rvMovies.layoutManager = LinearLayoutManager(context)
     binding.rvMovies.adapter = adapter
 
-    viewModel.onlineData.observe(viewLifecycleOwner) { movie ->
+    viewModel.fetchData()
+    viewModel.popularMovies.observe(viewLifecycleOwner) { movie ->
       movie?.let { adapter.changeList(it) }
     }
     //TODO: Check if there is a network connection before using the online source
@@ -38,7 +40,7 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener, MovieAdapter.On
   }
 
   override fun onItemClick(position: Int, view: View?) {
-    val clickedItem: Movie = adapter.movieList[position]
+    val clickedItem: MovieDto = adapter.movieList[position]
 
     val action = MainFragmentDirections.navigateToDetailsFragment(clickedItem)
     view?.findNavController()?.navigate(action)

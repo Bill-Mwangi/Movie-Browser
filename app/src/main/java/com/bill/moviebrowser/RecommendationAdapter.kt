@@ -1,11 +1,10 @@
 package com.bill.moviebrowser
 
 import coil.load
-import com.bill.moviebrowser.room.Movie
 import com.example.moviebrowser.R
 
 class RecommendationAdapter : TileAdapter() {
-  private lateinit var movieList: List<Movie>
+  private lateinit var movieList: List<MovieDto>
 
   override fun onBindViewHolder(holder: CastHolder, position: Int) {
     binding.apply {
@@ -20,7 +19,7 @@ class RecommendationAdapter : TileAdapter() {
     return movieList.size
   }
 
-  fun changeList(newList: List<Movie>) {
+  fun changeList(newList: List<MovieDto>) {
     movieList = newList
     notifyDataSetChanged()
   }

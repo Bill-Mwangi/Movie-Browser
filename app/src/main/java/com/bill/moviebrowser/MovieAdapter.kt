@@ -5,13 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.bill.moviebrowser.room.Movie
 import com.example.moviebrowser.R
 import com.example.moviebrowser.databinding.MovieItemBinding
 
 class MovieAdapter(private val listener: OnItemClickListener) :
   RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
-  var movieList = emptyList<Movie>()
+  var movieList = emptyList<MovieDto>()
   private lateinit var binding: MovieItemBinding
   private val baseUrl = "https://image.tmdb.org/t/p/w92"
 
@@ -50,7 +49,7 @@ class MovieAdapter(private val listener: OnItemClickListener) :
     return position
   }
 
-  fun changeList(newList: List<Movie>) {
+  fun changeList(newList: List<MovieDto>) {
     movieList = newList
     notifyDataSetChanged()
   }

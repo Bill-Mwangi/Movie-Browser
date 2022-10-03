@@ -2,6 +2,7 @@ package com.bill.moviebrowser
 
 import android.content.Context
 import androidx.room.Room
+import com.bill.moviebrowser.room.MovieDao
 import com.bill.moviebrowser.room.MovieDatabase
 import dagger.Module
 import dagger.Provides
@@ -32,10 +33,16 @@ object AppModule {
   @Singleton
   fun providesRoomDatabase(@ApplicationContext context: Context): MovieDatabase {
     return Room.databaseBuilder(
-      context.applicationContext,
+      context,
       MovieDatabase::class.java,
       "movie_database"
     ).build()
+  }
+
+  @Provides
+  @Singleton
+  fun provideMovieDao(database: MovieDatabase): MovieDao {
+    return database.movieDao()
   }
 
   @Provides

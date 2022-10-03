@@ -25,6 +25,6 @@
             app:destination="@id/mainFragment" />
         <argument
             android:name="movie"
-            app:argType="com.bill.moviebrowser.room.Movie" />
+            app:argType="com.bill.moviebrowser.MovieDto" />
     </fragment>
 </navigation>

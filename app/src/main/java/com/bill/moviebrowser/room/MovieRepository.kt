@@ -1,22 +1,43 @@
 package com.bill.moviebrowser.room
+import com.bill.moviebrowser.CastDto
+import com.bill.moviebrowser.MovieApi
+import com.bill.moviebrowser.MovieDto
+import javax.inject.Inject
 
-import com.bill.moviebrowser.TVDB
+class MovieRepository @Inject constructor(
+  private val movieApi: MovieApi,
+  private val movieDao: MovieDao
+) {
+  // Local Database
+  fun getMovies(): List<MovieDto> = movieDao.getAllMovies()
 
-class MovieRepository(private val movieDao: MovieDao, private val tvdb: TVDB) {
+  fun addMovie(vararg movie: MovieDto) = movieDao.addMovie(*movie)
 
-  fun fetchLocalData(): List<Movie> = movieDao.getAll()
+  fun addMovie(movieList: List<MovieDto>) = movieDao.addMovie(movieList)
 
-  suspend fun fetchOnlineData(): List<Movie> =
-    tvdb.getPopularMovies().movies
-
-  suspend fun fetchMovieRecommendations(movieId: Int, pageNo: Int) =
-    tvdb.getRecommendations(movieId, pageNo).movies
-
-  suspend fun fetchMovieCast(movieId: Int) = tvdb.getCast(movieId).list
-
-  fun add(movieList: List<Movie>) = movieDao.add(movieList)
-
-  fun search(searchQuery: String): List<Movie> {
+  fun findMovie(searchQuery: String): List<MovieDto> {
     return movieDao.searchMovie(searchQuery)
   }
+
+  fun getCast(movieId: Int) = movieDao.getCast(movieId)
+
+  fun addCast(vararg castListDto: CastDto) = movieDao.addCast(*castListDto)
+
+  fun addCast(castList: List<CastDto>) = movieDao.addCast(castList)
+
+  fun addMovieCast(vararg list: MovieCast) = movieDao.addMovieCast(*list)
+
+  fun addMovieCast(list: List<MovieCast>) = movieDao.addMovieCast(list)
+
+  // Online Sources
+  suspend fun fetchPopularMovies(): List<MovieDto> =
+    movieApi.getPopularMovies().movies
+  //todo: Store secret keys
+
+  suspend fun fetchMovieRecommendations(movieId: Int) =
+    movieApi.getRecommendations(movieId).movies
+
+  suspend fun fetchMovieCast(movieId: Int) = movieApi.getCast(movieId)
+
+  suspend fun fetchTopRatedMovies(): List<MovieDto> = movieApi.getTopRatedMovies().movies
 }

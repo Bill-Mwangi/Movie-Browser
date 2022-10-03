@@ -7,13 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.bill.moviebrowser.CastAdapter
 import com.bill.moviebrowser.MovieAdapter
-import com.bill.moviebrowser.room.Movie
+import com.bill.moviebrowser.MovieDto
 import com.bill.moviebrowser.viewmodel.MovieViewModel
 import com.example.moviebrowser.databinding.FragmentDetailsBinding
 
@@ -22,18 +22,17 @@ class DetailsFragment : Fragment(), MovieAdapter.OnItemClickListener {
   private val args: DetailsFragmentArgs by navArgs()
   private val movieAdapter: MovieAdapter by lazy { MovieAdapter(this) }
   private val castAdapter: CastAdapter by lazy { CastAdapter() }
-  private val viewModel: MovieViewModel by viewModels()
+  private val viewModel: MovieViewModel by activityViewModels()
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View {
     binding = FragmentDetailsBinding.inflate(layoutInflater, container, false)
-    viewModel.data(args.movie.tvdbID, 1)
+    viewModel.data(args.movie.movieId)
 
     binding.apply {
-      if (args.movie.backdrop != null) imageview.load("https://image.tmdb.org/t/p/w780${args.movie.backdrop}")
-      else imageview.load("https://image.tmdb.org/t/p/w780${args.movie.poster}")
+      imageview.load("https://image.tmdb.org/t/p/w780${args.movie.backdrop}")
 
       titleTv.text = args.movie.title
       descTv.text = args.movie.description
@@ -66,7 +65,7 @@ class DetailsFragment : Fragment(), MovieAdapter.OnItemClickListener {
   }
 
   override fun onItemClick(position: Int, view: View?) {
-    val clickedItem: Movie = movieAdapter.movieList[position]
+    val clickedItem: MovieDto = movieAdapter.movieList[position]
     Toast.makeText(context, "$clickedItem.title clicked", Toast.LENGTH_SHORT).show()
   }
 }
