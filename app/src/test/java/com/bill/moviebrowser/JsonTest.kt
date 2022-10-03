@@ -12,7 +12,7 @@ class JsonTest {
 
   @Test
   fun test() {
-    Assert.assertEquals(jsonString, """{"id": 1,"description":"Tes"}""")
+    Assert.assertEquals(jsonString, """{"id":1,"description":"Test"}""")
   }
 
 }
