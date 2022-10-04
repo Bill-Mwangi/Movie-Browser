@@ -3117,4 +3117,22 @@ class MovieApiTest {
       )
     }
   }
+
+  @Test
+  fun testLatestMovie() {
+    GlobalScope.launch {
+      val latest = movieApi.getLatestMovie()
+      val latestFromJson = gson.fromJson(
+        """{
+    "adult": true,
+    "backdrop_path": null,
+    "id": 1031626,
+    "original_title": "Scrum: Go Big or Go Home",
+    "overview": "Whether they're playing hard on the pitch or annihilating holes in the locker room, these oversexed Scrum: Go Big or Go Home jocks know that when you're dealing with a fellow rugby player, you always have to give it you're all. The Hot House Bulldogs know they have to Go Big or Go Home if they're going to beat the Raging Stallions, and they're prepared to put their asses on the line. From award-winning director Tony Dimarco, this bareback feature follows eleven men from the Hot House Bulldogs and the Raging Stallions who aren't afraid to get dirty during a match or downright filthy in the locker room. When the only option is to Go Big or Go Home, rest assured that the horny men of Scrum will definitely be going as big as they possibly can.",
+    "poster_path": null
+}""", MovieDto::class.java
+      )
+      assertEquals(latestFromJson, latest)
+    }
+  }
 }
