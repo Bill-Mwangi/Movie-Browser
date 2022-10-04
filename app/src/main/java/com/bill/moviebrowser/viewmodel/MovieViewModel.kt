@@ -1,6 +1,7 @@
 package com.bill.moviebrowser.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,22 +16,29 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-//class MovieViewModel(application: Application) : AndroidViewModel(application) {
 class MovieViewModel @Inject constructor(
   private val repository: MovieRepository,
   application: Application
 ) : AndroidViewModel(application) {
   private var _localData: MutableLiveData<List<MovieDto>> = MutableLiveData()
-  private var _onlineData: MutableLiveData<List<MovieDto>> = MutableLiveData()
+  private var _topRatedMovies: MutableLiveData<List<MovieDto>> = MutableLiveData()
+  private var _popularMovies: MutableLiveData<List<MovieDto>> = MutableLiveData()
   private var _recommendations: MutableLiveData<List<MovieDto>> = MutableLiveData()
   private var _searchList: MutableLiveData<List<MovieDto>> = MutableLiveData()
   private var _castList: MutableLiveData<List<CastDto>> = MutableLiveData()
+  private var _newest: MovieDto? = null
 
   val localData: LiveData<List<MovieDto>>
     get() = _localData
 
-  val onlineData: LiveData<List<MovieDto>>
-    get() = _onlineData
+  val topRatedMovies: LiveData<List<MovieDto>>
+    get() = _topRatedMovies
+
+  val popularMovies: LiveData<List<MovieDto>>
+    get() = _popularMovies
+
+  val newest: MovieDto?
+    get() = _newest
 
   val recommendations: LiveData<List<MovieDto>>
     get() = _recommendations
@@ -43,12 +51,28 @@ class MovieViewModel @Inject constructor(
 
   fun fetchData() {
     viewModelScope.launch(Dispatchers.IO) {
-      _onlineData.postValue(repository.fetchPopularMovies())
-//      _localData.postValue(repository.fetchLocalData())
-
-      onlineData.value?.let {
-        repository.addMovie(it)
+      try {
+        _newest = repository.fetchLatestMovie()
+        _topRatedMovies.postValue(repository.fetchTopRatedMovies())
+        _popularMovies.postValue(repository.fetchPopularMovies())
+        _localData.postValue(repository.getMovies())
+      } catch (e: Exception) {
+        Log.e("$e", "Exception in function fetchData()")
+      } finally {
+        updateLocalData()
       }
+    }
+  }
+
+  private fun updateLocalData() {
+    _topRatedMovies.value?.let {
+      repository.addMovie(it)
+    }
+    _popularMovies.value?.let {
+      repository.addMovie(it)
+    }
+    _newest?.let {
+      repository.addMovie(it)
     }
   }
 
@@ -60,13 +84,17 @@ class MovieViewModel @Inject constructor(
 
   fun data(movieId: Int) {
     viewModelScope.launch(Dispatchers.IO) {
-      _recommendations.postValue(repository.fetchMovieRecommendations(movieId))
-      val castList = repository.fetchMovieCast(movieId)
-      _castList.postValue(castList.castList)
-      repository.addCast(castList.castList)
+      val recommendations = repository.fetchMovieRecommendations(movieId)
+      _recommendations.postValue(recommendations)
 
-      for (cast in castList.castList)
-        repository.addMovieCast(MovieCast(movieId, cast.id))
+      val castList = repository.fetchMovieCast(movieId)
+      _castList.postValue(castList)
+
+      _castList.value?.let {
+        repository.addCast(it)
+        for (cast in it)
+          repository.addMovieCast(MovieCast(movieId, cast.id))
+      }
     }
   }
 }

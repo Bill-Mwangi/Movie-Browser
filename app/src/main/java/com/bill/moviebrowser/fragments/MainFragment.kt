@@ -31,12 +31,50 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener, MovieAdapter.On
     binding.rvMovies.adapter = adapter
 
     viewModel.fetchData()
-    viewModel.popularMovies.observe(viewLifecycleOwner) { movie ->
+
+    //Navigation Drawer
+    setupDrawerContent(binding.navView)
+
+    this.activity?.title = "All Movies"
+    viewModel.localData.observe(viewLifecycleOwner) { movie ->
       movie?.let { adapter.changeList(it) }
     }
     //TODO: Check if there is a network connection before using the online source
 
     return binding.root
+  }
+
+  private fun setupDrawerContent(navigationView: NavigationView) {
+    navigationView.setNavigationItemSelectedListener { menuItem ->
+      selectDrawerItem(menuItem)
+      true
+    }
+  }
+
+  private fun selectDrawerItem(menuItem: MenuItem) {
+    when (menuItem.itemId) {
+      R.id.popular -> {
+        this.activity?.title = "Popular"
+        viewModel.popularMovies.observe(viewLifecycleOwner) { movie ->
+          movie?.let { adapter.changeList(it) }
+        }
+      }
+
+      R.id.top_rated -> {
+        this.activity?.title = "Top Rated"
+        viewModel.topRatedMovies.observe(viewLifecycleOwner) { movie ->
+          movie?.let { adapter.changeList(it) }
+        }
+      }
+
+      R.id.newest -> {
+        this.activity?.title = "Newest"
+        viewModel.newest?.let {
+          val action = MainFragmentDirections.navigateToDetailsFragment(it)
+          view?.findNavController()?.navigate(action)
+        }
+      }
+    }
   }
 
   override fun onItemClick(position: Int, view: View?) {

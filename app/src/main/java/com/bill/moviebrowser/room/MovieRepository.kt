@@ -37,7 +37,9 @@ class MovieRepository @Inject constructor(
   suspend fun fetchMovieRecommendations(movieId: Int) =
     movieApi.getRecommendations(movieId).movies
 
-  suspend fun fetchMovieCast(movieId: Int) = movieApi.getCast(movieId)
+  suspend fun fetchLatestMovie() = movieApi.getLatestMovie()
+
+  suspend fun fetchMovieCast(movieId: Int) = movieApi.getCast(movieId).castList
 
   suspend fun fetchTopRatedMovies(): List<MovieDto> = movieApi.getTopRatedMovies().movies
 }

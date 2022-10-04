@@ -3,16 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/latest"
-            android:icon="@drawable/ic_latest"
-            android:title="@string/latest" />
-
+    <group
+        android:id="@+id/nav_drawer"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/popular"
-            android:icon="@drawable/ic_popular"
+            android:icon="@drawable/ic_latest"
             android:title="@string/popular" />
+
+        <item
+            android:id="@+id/top_rated"
+            android:icon="@drawable/ic_popular"
+            android:title="@string/top_rated" />
 
         <item
             android:id="@+id/newest"

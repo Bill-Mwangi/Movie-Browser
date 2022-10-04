@@ -25,7 +25,7 @@ data class MovieDto(
   val backdrop: String
 ) : Parcelable {
   constructor(parcel: Parcel) : this(
-    parcel.readByte() != 0.toByte(),
+    parcel.readBoolean(),
     parcel.readInt(),
     parcel.readString()!!,
     parcel.readString()!!,
@@ -56,6 +56,7 @@ data class MovieDto(
    */
   override fun writeToParcel(dest: Parcel?, flags: Int) {
     if (dest != null) {
+      dest.writeBoolean(adult)
       dest.writeInt(movieId)
       dest.writeString(title)
       dest.writeString(description)
