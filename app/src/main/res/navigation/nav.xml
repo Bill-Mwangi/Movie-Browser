@@ -26,5 +26,8 @@
         <argument
             android:name="movie"
             app:argType="com.bill.moviebrowser.MovieDto" />
+        <action
+            android:id="@+id/navigate_to_self"
+            app:destination="@id/detailsFragment" />
     </fragment>
 </navigation>

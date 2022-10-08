@@ -8,12 +8,21 @@ import coil.load
 import com.example.moviebrowser.R
 import com.example.moviebrowser.databinding.TileBinding
 
-class RecommendationAdapter: RecyclerView.Adapter<RecommendationAdapter.RecommendationsHolder>() {
-  private var movieList: List<MovieDto> = emptyList()
+class RecommendationAdapter(private val listener: OnItemClickListener): RecyclerView.Adapter<RecommendationAdapter.RecommendationsHolder>() {
+  var movieList = emptyList<MovieDto>()
   private lateinit var binding: TileBinding
   private val baseUrl = "https://image.tmdb.org/t/p/w92"
 
-  inner class RecommendationsHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+  inner class RecommendationsHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+
+    init {
+      itemView.setOnClickListener(this)
+    }
+
+    override fun onClick(view: View?) {
+      if (adapterPosition != RecyclerView.NO_POSITION) listener.onItemClick(adapterPosition, view)
+    }
+  }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendationsHolder {
     binding = TileBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -41,5 +50,9 @@ class RecommendationAdapter: RecyclerView.Adapter<RecommendationAdapter.Recommen
   fun changeList(newList: List<MovieDto>) {
     movieList = newList
     notifyDataSetChanged()
+  }
+
+  interface OnItemClickListener {
+    fun onItemClick(position: Int, view: View?)
   }
 }

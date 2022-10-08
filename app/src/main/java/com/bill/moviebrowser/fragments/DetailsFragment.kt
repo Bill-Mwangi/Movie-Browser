@@ -5,25 +5,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.bill.moviebrowser.CastAdapter
-import com.bill.moviebrowser.MovieAdapter
-import com.bill.moviebrowser.MovieDto
 import com.bill.moviebrowser.RecommendationAdapter
 import com.bill.moviebrowser.viewmodel.MovieViewModel
 import com.example.moviebrowser.databinding.FragmentDetailsBinding
 
-class DetailsFragment : Fragment(), MovieAdapter.OnItemClickListener {
+class DetailsFragment : Fragment(), RecommendationAdapter.OnItemClickListener {
   private lateinit var binding: FragmentDetailsBinding
   private val args: DetailsFragmentArgs by navArgs()
-  private val movieAdapter: MovieAdapter by lazy { MovieAdapter(this) }
   private val castAdapter: CastAdapter by lazy { CastAdapter() }
-  private val recommendationsAdapter: RecommendationAdapter by lazy { RecommendationAdapter() }
+  private val recommendationsAdapter: RecommendationAdapter by lazy { RecommendationAdapter(this) }
   private val viewModel: MovieViewModel by activityViewModels()
 
   override fun onCreateView(
@@ -67,7 +64,7 @@ class DetailsFragment : Fragment(), MovieAdapter.OnItemClickListener {
   }
 
   override fun onItemClick(position: Int, view: View?) {
-    val clickedItem: MovieDto = movieAdapter.movieList[position]
-    Toast.makeText(context, "$clickedItem.title clicked", Toast.LENGTH_SHORT).show()
+    view?.findNavController()
+      ?.navigate(DetailsFragmentDirections.navigateToSelf(recommendationsAdapter.movieList[position]))
   }
 }
