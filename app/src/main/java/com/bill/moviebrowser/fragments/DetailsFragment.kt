@@ -14,6 +14,7 @@ import coil.load
 import com.bill.moviebrowser.CastAdapter
 import com.bill.moviebrowser.MovieAdapter
 import com.bill.moviebrowser.MovieDto
+import com.bill.moviebrowser.RecommendationAdapter
 import com.bill.moviebrowser.viewmodel.MovieViewModel
 import com.example.moviebrowser.databinding.FragmentDetailsBinding
 
@@ -22,6 +23,7 @@ class DetailsFragment : Fragment(), MovieAdapter.OnItemClickListener {
   private val args: DetailsFragmentArgs by navArgs()
   private val movieAdapter: MovieAdapter by lazy { MovieAdapter(this) }
   private val castAdapter: CastAdapter by lazy { CastAdapter() }
+  private val recommendationsAdapter: RecommendationAdapter by lazy { RecommendationAdapter() }
   private val viewModel: MovieViewModel by activityViewModels()
 
   override fun onCreateView(
@@ -39,7 +41,7 @@ class DetailsFragment : Fragment(), MovieAdapter.OnItemClickListener {
 
       recommendationsRv.apply {
         layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        adapter = movieAdapter
+        adapter = recommendationsAdapter
       }
 
       castRv.apply {
@@ -49,7 +51,7 @@ class DetailsFragment : Fragment(), MovieAdapter.OnItemClickListener {
 
       viewModel.recommendations.observe(viewLifecycleOwner) { movie ->
         movie?.let {
-          movieAdapter.changeList(it)
+          recommendationsAdapter.changeList(it)
         }
       }
 

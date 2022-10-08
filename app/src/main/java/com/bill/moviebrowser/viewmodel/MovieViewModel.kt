@@ -86,6 +86,11 @@ class MovieViewModel @Inject constructor(
     viewModelScope.launch(Dispatchers.IO) {
       val recommendations = repository.fetchMovieRecommendations(movieId)
       _recommendations.postValue(recommendations)
+      _recommendations.let {
+        Log.d("data", "fetched recommendations for movie $movieId")
+      }
+    }
+  }
 
       val castList = repository.fetchMovieCast(movieId)
       _castList.postValue(castList)
