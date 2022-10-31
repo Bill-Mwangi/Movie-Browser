@@ -8,9 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.bill.moviebrowser.CastDto
 import com.bill.moviebrowser.MovieDto
-import com.bill.moviebrowser.room.MovieCast
 import com.bill.moviebrowser.room.MovieRepository
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,7 +26,6 @@ class MovieViewModel @Inject constructor(
   private var _searchList: MutableLiveData<List<MovieDto>> = MutableLiveData()
   private var _castList: MutableLiveData<List<CastDto>> = MutableLiveData()
   private var _newest: MovieDto? = null
-  private var gson = Gson()
 
   val localData: LiveData<List<MovieDto>>
     get() = _localData
@@ -85,9 +82,8 @@ class MovieViewModel @Inject constructor(
   }
 
   fun data(movieId: Int) {
-    fetchCastandCrew(movieId)
     fetchRecommendations(movieId)
-    _castList.value?.let { updateCast(movieId, it) }
+    fetchCastandCrew(movieId)
   }
 
   private fun fetchRecommendations(movieId: Int) {
@@ -95,27 +91,28 @@ class MovieViewModel @Inject constructor(
       val recommendations = repository.fetchMovieRecommendations(movieId)
       _recommendations.postValue(recommendations)
       _recommendations.let {
-        Log.d("data", "fetched recommendations for movie $movieId")
       }
     }
   }
 
   private fun fetchCastandCrew(movieId: Int) {
     viewModelScope.launch(Dispatchers.IO) {
-      val castList = repository.fetchMovieCast(movieId)
+      val castList: List<CastDto> = repository.fetchMovieCast(movieId)
       _castList.postValue(castList)
-      castList.let {
-        Log.d("data", "Fetched cast for movie $movieId")
-        Log.d("data", gson.toJson(castList))
-      }
+      updateCast(movieId, castList)
     }
   }
 
   private fun updateCast(movieId: Int, castList: List<CastDto>) {
-    repository.addCast(castList)
-    for (cast in castList)
-      repository.addMovieCast(MovieCast(movieId, cast.id))
+    viewModelScope.launch(Dispatchers.IO) {
+      repository.addCast(castList)
+//      for (cast in castList)
+//        repository.addMovieCast(MovieCast(movieId, cast.id))
+    }
+  }
 
-    Log.d("data", "Updated cast to database")
+  fun flush() {
+    _castList.postValue(emptyList())
+    _recommendations.postValue(emptyList())
   }
 }

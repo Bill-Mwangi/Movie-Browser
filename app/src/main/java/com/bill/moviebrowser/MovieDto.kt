@@ -33,35 +33,18 @@ data class MovieDto(
     parcel.readString()!!
   )
 
-  /**
-   * Describe the kinds of special objects contained in this Parcelable
-   * instance's marshaled representation. For example, if the object will
-   * include a file descriptor in the output of [.writeToParcel],
-   * the return value of this method must include the
-   * [.CONTENTS_FILE_DESCRIPTOR] bit.
-   *
-   * @return a bitmask indicating the set of special object types marshaled
-   * by this Parcelable object instance.
-   */
   override fun describeContents(): Int {
     return 0
   }
 
-  /**
-   * Flatten this object in to a Parcel.
-   *
-   * @param dest The Parcel in which the object should be written.
-   * @param flags Additional flags about how the object should be written.
-   * May be 0 or [.PARCELABLE_WRITE_RETURN_VALUE].
-   */
   override fun writeToParcel(dest: Parcel?, flags: Int) {
-    if (dest != null) {
-      dest.writeBoolean(adult)
-      dest.writeInt(movieId)
-      dest.writeString(title)
-      dest.writeString(description)
-      dest.writeString(poster)
-      dest.writeString(backdrop)
+    dest?.apply {
+      this.writeBoolean(adult)
+      this.writeInt(movieId)
+      this.writeString(title)
+      this.writeString(description)
+      this.writeString(poster)
+      this.writeString(backdrop)
     }
   }
 

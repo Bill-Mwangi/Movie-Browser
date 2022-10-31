@@ -5,7 +5,7 @@ import com.bill.moviebrowser.CastDto
 import com.bill.moviebrowser.MovieDto
 
 @Entity(
-  tableName = "movie_cast", primaryKeys = ["movie_id", "cast_id"], foreignKeys = [ForeignKey(
+  tableName = "movie_cast", foreignKeys = [ForeignKey(
     entity = MovieDto::class,
     parentColumns = arrayOf("movie_id"),
     childColumns = arrayOf("movie_id"),
@@ -20,8 +20,11 @@ import com.bill.moviebrowser.MovieDto
   )], indices = [Index(value = ["movie_id", "cast_id"], unique = true)]
 )
 data class MovieCast(
-  @ColumnInfo(name = "movie_id")
+  @ColumnInfo(name = "movie_id", index = true)
   val movieId: Int,
-  @ColumnInfo(name = "cast_id")
+  @ColumnInfo(name = "cast_id", index = true)
   val castId: Int
-)
+) {
+  @PrimaryKey(autoGenerate = true)
+  var id: Int = 0
+}
