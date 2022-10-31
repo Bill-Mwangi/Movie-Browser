@@ -1,30 +1,37 @@
 package com.bill.moviebrowser
 
+import com.bill.moviebrowser.room.MovieDao
 import com.google.gson.Gson
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
 import javax.inject.Inject
 
-@RunWith(MockitoJUnitRunner::class)
+@HiltAndroidTest
 class MovieApiTest {
+  @get: Rule
+  val hiltRule = HiltAndroidRule(this)
 
   @Inject
   private lateinit var movieApi: MovieApi
+
+  @Inject
+  private lateinit var movieDao: MovieDao
+
   private val gson = Gson()
 
-  @OptIn(DelicateCoroutinesApi::class)
+  @OptIn(ExperimentalCoroutinesApi::class)
   @Test
-  fun testCast() {
-    GlobalScope.launch {
-      val movieWithCast = movieApi.getCast(526896)
-      val jsonString = gson.toJson(movieWithCast)
-      assertEquals(
-        """{
+  fun testCast() = runTest {
+    hiltRule.inject()
+    val movieWithCast = movieApi.getCast(526896)
+    val jsonString = gson.toJson(movieWithCast)
+    assertEquals(
+      """{
     "id": 526896,
     "cast": [
         {
@@ -2663,18 +2670,19 @@ class MovieApiTest {
         }
     ]
 }""", jsonString
-      )
-    }
+    )
   }
 
-  @Test
-  fun testRecommendation() {
-    GlobalScope.launch {
-      val recommendations = movieApi.getRecommendations(526896)
-      val recommendationsJson = gson.toJson(recommendations)
 
-      assertEquals(
-        """{
+  @OptIn(ExperimentalCoroutinesApi::class)
+  @Test
+  fun testRecommendation() = runTest {
+    hiltRule.inject()
+    val recommendations = movieApi.getRecommendations(526896)
+    val recommendationsJson = gson.toJson(recommendations)
+
+    assertEquals(
+      """{
     "page": 1,
     "results": [
         {
@@ -3114,16 +3122,17 @@ class MovieApiTest {
     "total_pages": 2,
     "total_results": 40
 }""", recommendationsJson
-      )
-    }
+    )
   }
 
+
+  @OptIn(ExperimentalCoroutinesApi::class)
   @Test
-  fun testLatestMovie() {
-    GlobalScope.launch {
-      val latest = movieApi.getLatestMovie()
-      val latestFromJson = gson.fromJson(
-        """{
+  fun testLatestMovie() = runTest {
+    hiltRule.inject()
+    val latest = movieApi.getLatestMovie()
+    val latestFromJson = gson.fromJson(
+      """{
     "adult": true,
     "backdrop_path": null,
     "id": 1031626,
@@ -3131,8 +3140,7 @@ class MovieApiTest {
     "overview": "Whether they're playing hard on the pitch or annihilating holes in the locker room, these oversexed Scrum: Go Big or Go Home jocks know that when you're dealing with a fellow rugby player, you always have to give it you're all. The Hot House Bulldogs know they have to Go Big or Go Home if they're going to beat the Raging Stallions, and they're prepared to put their asses on the line. From award-winning director Tony Dimarco, this bareback feature follows eleven men from the Hot House Bulldogs and the Raging Stallions who aren't afraid to get dirty during a match or downright filthy in the locker room. When the only option is to Go Big or Go Home, rest assured that the horny men of Scrum will definitely be going as big as they possibly can.",
     "poster_path": null
 }""", MovieDto::class.java
-      )
-      assertEquals(latestFromJson, latest)
-    }
+    )
+    assertEquals(latestFromJson, latest)
   }
 }
