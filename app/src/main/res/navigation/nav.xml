@@ -29,5 +29,21 @@
         <action
             android:id="@+id/navigate_to_self"
             app:destination="@id/detailsFragment" />
+        <action
+            android:id="@+id/navigate_to_castFragment"
+            app:destination="@id/castFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/castFragment"
+        android:name="com.bill.moviebrowser.fragments.CastFragment"
+        android:label="fragment_cast"
+        tools:layout="@layout/fragment_cast">
+        <action
+            android:id="@+id/navigate_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+        <argument
+            android:name="cast"
+            app:argType="com.bill.moviebrowser.CastDto" />
     </fragment>
 </navigation>

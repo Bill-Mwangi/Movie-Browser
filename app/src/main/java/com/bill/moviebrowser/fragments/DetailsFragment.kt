@@ -1,7 +1,6 @@
 package com.bill.moviebrowser.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +15,11 @@ import com.bill.moviebrowser.RecommendationAdapter
 import com.bill.moviebrowser.viewmodel.MovieViewModel
 import com.example.moviebrowser.databinding.FragmentDetailsBinding
 
-class DetailsFragment : Fragment(), RecommendationAdapter.OnItemClickListener {
+class DetailsFragment : Fragment(), RecommendationAdapter.OnItemClickListener,
+  CastAdapter.OnItemClickListener {
   private lateinit var binding: FragmentDetailsBinding
   private val args: DetailsFragmentArgs by navArgs()
-  private val castAdapter: CastAdapter by lazy { CastAdapter() }
+  private val castAdapter: CastAdapter by lazy { CastAdapter(this) }
   private val recommendationsAdapter: RecommendationAdapter by lazy { RecommendationAdapter(this) }
   private val viewModel: MovieViewModel by activityViewModels()
 
@@ -28,6 +28,7 @@ class DetailsFragment : Fragment(), RecommendationAdapter.OnItemClickListener {
     savedInstanceState: Bundle?
   ): View {
     binding = FragmentDetailsBinding.inflate(layoutInflater, container, false)
+    viewModel.flush()
     viewModel.data(args.movie.movieId)
 
     binding.apply {
@@ -52,10 +53,9 @@ class DetailsFragment : Fragment(), RecommendationAdapter.OnItemClickListener {
         }
       }
 
-      viewModel.castList.observe(viewLifecycleOwner) { movie ->
-        movie?.let {
+      viewModel.castList.observe(viewLifecycleOwner) { cast ->
+        cast?.let {
           castAdapter.changeList(it)
-          Log.d("cast", it.toString())
         }
       }
     }
@@ -66,5 +66,8 @@ class DetailsFragment : Fragment(), RecommendationAdapter.OnItemClickListener {
   override fun onItemClick(position: Int, view: View?) {
     view?.findNavController()
       ?.navigate(DetailsFragmentDirections.navigateToSelf(recommendationsAdapter.movieList[position]))
+  }
+
+  override fun onCastItemClick(position: Int, view: View?) {
   }
 }

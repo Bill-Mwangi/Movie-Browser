@@ -1,15 +1,15 @@
 package com.bill.moviebrowser
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
-import kotlinx.serialization.Serializable
 
 @Entity(
   tableName = "cast_table"
 )
-@Serializable
 data class CastDto(
   @PrimaryKey
   @field:Json(name = "id")
@@ -25,4 +25,39 @@ data class CastDto(
   val character: String,
   @field:Json(name = "profile_path")
   val profile: String
-)
+) : Parcelable {
+
+  constructor(parcel: Parcel) : this(
+    parcel.readInt(),
+    parcel.readBoolean(),
+    parcel.readInt(),
+    parcel.readString()!!,
+    parcel.readString()!!,
+    parcel.readString()!!
+  )
+
+  override fun describeContents(): Int {
+    return 0
+  }
+
+  override fun writeToParcel(dest: Parcel?, flags: Int) {
+    dest?.apply {
+      this.writeInt(id)
+      this.writeBoolean(adult)
+      this.writeInt(gender)
+      this.writeString(name)
+      this.writeString(character)
+      this.writeString(profile)
+    }
+  }
+
+  companion object CREATOR : Parcelable.Creator<CastDto> {
+    override fun createFromParcel(parcel: Parcel): CastDto {
+      return CastDto(parcel)
+    }
+
+    override fun newArray(size: Int): Array<CastDto?> {
+      return arrayOfNulls(size)
+    }
+  }
+}
